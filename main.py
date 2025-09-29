@@ -8,11 +8,30 @@ import math
 ### PART 1: SEARCHING UNSORTED LISTS
 
 # search an unordered list L for a key x using iterate
-def isearch(L, x):
-    ###TODO
-    ###
+def isearch_v1(L, x):
+    
+    def f(a, b, kv = x):
+        c = False
+        if b == kv:
+            c = True
+        return (a or c)
+        
+    return iterate(f, False, L)
 
-def test_isearch():
+def isearch_v2(L, x):
+    def f(prev_result, new_element):
+        
+        a = prev_result[0]
+        c = False
+        if prev_result[1] == new_element:
+            c = True
+        return ((a or c), prev_result[1])
+        
+    r = iterate(f, (False, x), L)
+    return r[0]
+    
+
+def test_isearch(isearch):
     assert isearch([1, 3, 5, 4, 2, 9, 7], 2) == (2 in [1, 3, 5, 4, 2, 9, 7])
     assert isearch([1, 3, 5, 2, 9, 7], 7) == (7 in [1, 3, 5, 2, 9, 7])
     assert isearch([1, 3, 5, 2, 9, 7], 99) == (99 in [1, 3, 5, 2, 9, 7])
@@ -21,6 +40,7 @@ def test_isearch():
 
 def iterate(f, x, a):
     # done. do not change me.
+    #print('iterate: calling %s x=%s a=%s' % (f.__name__, x, a))
     if len(a) == 0:
         return x
     else:
@@ -28,8 +48,17 @@ def iterate(f, x, a):
 
 # search an unordered list L for a key x using reduce
 def rsearch(L, x):
-    ###TODO
-    ###
+    def f(a, b, kv = x):
+        if a == kv:
+            return a
+        elif b == kv:
+            return b
+        else:
+            return 0
+        
+    r = reduce(f, 1, L)
+    return r == x
+
 
 def test_rsearch():
     assert rsearch([1, 3, 5, 4, 2, 9, 7], 2) == (2 in [1, 3, 5, 4, 2, 9, 7])
@@ -38,7 +67,6 @@ def test_rsearch():
     assert rsearch([], 2) == (2 in [1, 3, 5])
 
 def reduce(f, id_, a):
-    print(a)
     # done. do not change me.
     if len(a) == 0:
         return id_
@@ -59,8 +87,6 @@ def ureduce(f, id_, a):
         # can call these in parallel
         return f(reduce(f, id_, a[:len(a)//3]),
                  reduce(f, id_, a[len(a)//3:]))
-
-
 
 
 ### PART 3: PARENTHESES MATCHING
@@ -231,3 +257,10 @@ def test_parens_match_dc():
     assert parens_match_dc(['(', '(', ')']) == False
     assert parens_match_dc(['(', 'a', ')', ')', '(']) == False
     assert parens_match_dc([]) == True 
+
+
+if __name__ == "__main__":
+    test_isearch(isearch_v1)
+    test_rsearch()
+    test_parens_match_iterative()
+    test_parens_match_scan()
