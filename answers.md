@@ -68,6 +68,19 @@ takes $A$ as an argument and returns the distinct elements of $A$
 (preserving order). Analyze the work and span of your algorithm.
 
 
+```
+f(List, element):
+    if element in List: (funcitons like isearch in first part)
+        return List
+    else:
+        return List + element
+
+dedup(A):
+    iterate(f, [], A)
+```
+
+based on the definition of funciton dedup we have to iterate over all elements in List A (preserving order) and then check if that element is in the alraedy seen elements or not. in the worst case all the elements are unique then we are doing the most work at the last when we have to check the list of size n-1. so for i in range(len(A)) we have to check lists of size 0 to n-1 so it would be $W(n) = \sum_{i = 0} ^{n-1} O(i) \in O(n^2)$. since we have to do all these sequentially so span should be equal to work. if we just consider one element at the moment W(n) = S(n) = O(n) or the search could be done in parall (for example S(n) seach = log(n)) then S(n) = O(n log n).
+
 
 - **2b.** Deduplication in a network** Imagine now that we have a
 collection of lists $A_0, \ldots, A_m$, where each list has $n$
@@ -78,10 +91,27 @@ takes $A$ as an argument and returns the distinct elements of $A$
 (preserving order). Analyze the work and span of your algorithm and
 compare it to the work and span from part a) above.
 
+one way to solve this could be just flatten the inputs and consider it as a single input list:
+
+```
+f(List, element):
+    if element in List: (funcitons like isearch in first part)
+        return List
+    else:
+        return List + element
+
+multi-dedup(A):
+    iterate(f, [], flatten(A = [A_0, ..., A_m])
+```
+
+in the worst case the result is just like part a if we consider |flatted_A| = n then ( $W(n) \in O(n^2), $S(n) \in O(n log n)$ )
+
 
 - **2c.** Sequence operations** Are any of our sequence operations useful
 for either of these problem settings? If so, which operations are useful and
 why? If not, why do they not help us?
+
+we can use iterate for the fist one and based on the algorithm on the second part flatten, iterate, reduce could be usefull.
 
 ---
 
