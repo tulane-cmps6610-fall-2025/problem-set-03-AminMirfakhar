@@ -88,6 +88,20 @@ why? If not, why do they not help us?
 - **3a.** iterative solution** Implement `parens_match_iterative`, a solution to this problem using the `iterate` function. **Hint**: consider using a single counter variable to keep track of whether there are more open or closed parentheses. How can you update this value while iterating from left to right through the input? What must be true of this value at each step for the parentheses to be matched? To complete this, complete the `parens_update` function and the `parens_match_iterative` function. The `parens_update` function will be called in combination with `iterate` inside `parens_match_iterative`. Test your implementation with `test_parens_match_iterative`.
 
 
+``` python
+def parens_update(current_output:int , next_input):
+
+    if current_output == -1:  return current_output
+    elif next_input == "(": return current_output + 1
+    elif next_input == ")": return current_output - 1
+    else: return current_output
+
+```
+
+this function get a element as next_input to check if it is "(", ")" (an opened or closed parenthese. if it is opened it add 1 to the current_output and if it is closed it substract 1 from that element otherwise it would be onchanged. but, there is case just like 
+``` python parens_match_scan(['(', 'a', ')', ')', '(']) ``` where the order of closing and opening doesn't match, to solve this we add ``` if current_output == -1:  return current_output ```. since each parentetheses should be opend and closed in order, then we can not have any negative value for the current_output and if it happens this shows the opening and closing is out of the order some where.
+
+
 - **3b.** What are the recurrences and corresponding asymptotic
   expressions for the work and span of this solution?
   
