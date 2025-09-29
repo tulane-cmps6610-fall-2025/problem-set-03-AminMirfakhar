@@ -30,7 +30,7 @@ def isearch_v2(L, x):
     r = iterate(f, (False, x), L)
     return r[0]
     
-
+isearch = isearch_v2
 def test_isearch(isearch):
     assert isearch([1, 3, 5, 4, 2, 9, 7], 2) == (2 in [1, 3, 5, 4, 2, 9, 7])
     assert isearch([1, 3, 5, 2, 9, 7], 7) == (7 in [1, 3, 5, 2, 9, 7])
