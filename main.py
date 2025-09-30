@@ -243,13 +243,6 @@ def parens_match_dc_helper(mylist):
       L is the number of unmatched left parentheses. This output is used by 
       parens_match_dc to return the final True or False value
     """
-    # base cases
-    
-    # recursive case
-    # - first solve subproblems
-    
-    # - then compute the solution (R,L) using these solutions, in constant time.
-    
     if len(mylist) == 0:
         return (0, 0)
     if len(mylist) == 1:
@@ -260,7 +253,6 @@ def parens_match_dc_helper(mylist):
         else:
             return (0, 0)  # in case there are other characters
     
-    # recursive case
     mid = len(mylist) // 2
     left = mylist[:mid]
     right = mylist[mid:]
@@ -268,7 +260,6 @@ def parens_match_dc_helper(mylist):
     (R1, L1) = parens_match_dc_helper(left)
     (R2, L2) = parens_match_dc_helper(right)
     
-    # combine results
     matched = min(L1, R2)
     R = R1 + R2 - matched
     L = L1 + L2 - matched
