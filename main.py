@@ -30,7 +30,7 @@ def isearch_v2(L, x):
     r = iterate(f, (False, x), L)
     return r[0]
     
-isearch = isearch_v2
+
 def test_isearch(isearch):
     assert isearch([1, 3, 5, 4, 2, 9, 7], 2) == (2 in [1, 3, 5, 4, 2, 9, 7])
     assert isearch([1, 3, 5, 2, 9, 7], 7) == (7 in [1, 3, 5, 2, 9, 7])
@@ -89,6 +89,8 @@ def ureduce(f, id_, a):
                  reduce(f, id_, a[len(a)//3:]))
 
 
+
+
 ### PART 3: PARENTHESES MATCHING
 
 #### Iterative solution
@@ -108,25 +110,15 @@ def parens_match_iterative(mylist):
     >>>parens_match_iterative(['('])
     False
     """
-    ### TODO
     return iterate(parens_update, 0, mylist) == 0
     ###
 
+def parens_update(current_output:int , next_input):
 
-def parens_update(current_output, next_input):
-    """
-    This function will be passed to the `iterate` function to 
-    solve the balanced parenthesis problem.
-    
-    Like all functions used by iterate, it takes in:
-    current_output....the cumulative output thus far (e.g., the running sum when doing addition)
-    next_input........the next value in the input
-    
-    Returns:
-      the updated value of `current_output`
-    """
-    ###TODO
-    ###
+    if current_output == -1:  return current_output
+    elif next_input == "(": return current_output + 1
+    elif next_input == ")": return current_output - 1
+    else: return current_output
 
 
 def test_parens_match_iterative():
@@ -159,7 +151,21 @@ def parens_match_scan(mylist):
     False
     
     """
-    ###TODO
+    
+    def sum_xy(x, y):
+        return x + y
+    
+    maped_mylist = list(map(paren_map, mylist))
+    
+    scan_mylist = scan(sum_xy, 0 , maped_mylist)
+    prefix_sums, total_sum = scan_mylist
+    min_value = scan(min_f, 0, prefix_sums)[1]
+    
+    if total_sum == 0 and min_value == 0:
+        return True
+    else:
+        return False
+    
     ###
 
 def scan(f, id_, a):
@@ -171,8 +177,8 @@ def scan(f, id_, a):
     """
     return (
             [reduce(f, id_, a[:i+1]) for i in range(len(a))],
-             reduce(f, id_, a)
-           )
+              reduce(f, id_, a)
+            )
 
 def paren_map(x):
     """
@@ -180,7 +186,7 @@ def paren_map(x):
     This will be used by your `parens_match_scan` function.
     
     Params:
-       x....an element of the input to the parens match problem (e.g., '(' or 'a')
+        x....an element of the input to the parens match problem (e.g., '(' or 'a')
        
     >>>paren_map('(')
     1
@@ -237,7 +243,6 @@ def parens_match_dc_helper(mylist):
       L is the number of unmatched left parentheses. This output is used by 
       parens_match_dc to return the final True or False value
     """
-    ###TODO
     # base cases
     
     # recursive case
@@ -245,7 +250,30 @@ def parens_match_dc_helper(mylist):
     
     # - then compute the solution (R,L) using these solutions, in constant time.
     
-    ###
+    if len(mylist) == 0:
+        return (0, 0)
+    if len(mylist) == 1:
+        if mylist[0] == '(':
+            return (0, 1)
+        elif mylist[0] == ')':
+            return (1, 0)
+        else:
+            return (0, 0)  # in case there are other characters
+    
+    # recursive case
+    mid = len(mylist) // 2
+    left = mylist[:mid]
+    right = mylist[mid:]
+    
+    (R1, L1) = parens_match_dc_helper(left)
+    (R2, L2) = parens_match_dc_helper(right)
+    
+    # combine results
+    matched = min(L1, R2)
+    R = R1 + R2 - matched
+    L = L1 + L2 - matched
+    
+    return (R, L)
     
 
 def test_parens_match_dc():
@@ -264,3 +292,5 @@ if __name__ == "__main__":
     test_rsearch()
     test_parens_match_iterative()
     test_parens_match_scan()
+    test_parens_match_dc()
+    
