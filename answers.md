@@ -134,14 +134,38 @@ this function get a element as next_input to check if it is "(", ")" (an opened 
 
 - **3b.** What are the recurrences and corresponding asymptotic
   expressions for the work and span of this solution?
+
+Again we iteratively go through each element of mylist to check them so the work and span are the linear function of input size (O(n)).
+
   
 
 - **3c.** Using `scan`** Implement `parens_match_scan` a solution to this problem using `scan`. **Hint**: We have given you the function `paren_map` which maps `(` to `1`, `)` to `-1` and everything else to `0`. How can you pass this function to `scan` to solve the problem? You may also find the `min_f` function useful here. Implement `parens_match_scan` and test with `test_parens_match_scan`
+
+as a solution if we assign +1, -1, 0 to each element (with map) and similar to prefix_sum calculate the sum of elements (with scan) then in the output of scan if the it has an negative element it shows that the order of closing and opening parenthese doesn't match and if the final element is not equal to zero means that the number of opened parenthese is not equal to number of closed one.
+
+``` python
+
+    def sum_xy(x, y):
+        return x + y
+    
+    maped_mylist = list(map(paren_map, mylist))
+    
+    scan_mylist = scan(sum_xy, 0 , maped_mylist)
+    prefix_sums, total_sum = scan_mylist
+    min_value = scan(min_f, 0, prefix_sums)[1]
+    
+    if total_sum == 0 and min_value == 0:
+        return True
+    else:
+        return False
+
+```
 
 
 - **3d.** Assume that any `map`s are done in parallel, and that we use
 the most efficient implementation of `scan` (that uses contraction) from class. What are the recurrences for the work and pan of this solution? 
 
+if we consider map would happen in parallel (O(1)) for each element then the work is O(n) and span O(1), the efficient implementation of the scan also need O(n) work and log(n) span. so the algorithm work would be O(n) and the span O(log n).
 
 
 - **3e.** A Divide-and-Conquer Solution** Implement
@@ -161,8 +185,44 @@ the most efficient implementation of `scan` (that uses contraction) from class. 
   recursive calls. That is, if (i,j) is the result for the left half of the list, and (k,l) is the output of the right half of the list, how can we compute the proper return value (R,L) using only i,j,k,l? Try a few example inputs to guide your solution, then test with `test_parens_match_dc_helper`.
 
 
+based on the hints, the function could be write as below:
+having a tuple showing the number of unmatched right parentheses (R), and the number of unmatched left parentheses (L)
 
+``` python
+
+    if len(mylist) == 0:
+        return (0, 0)
+    if len(mylist) == 1:
+        if mylist[0] == '(':
+            return (0, 1)
+        elif mylist[0] == ')':
+            return (1, 0)
+        else:
+            return (0, 0)  # in case there are other characters
+    
+    # recursive case
+    mid = len(mylist) // 2
+    left = mylist[:mid]
+    right = mylist[mid:]
+    
+    (R1, L1) = parens_match_dc_helper(left)
+    (R2, L2) = parens_match_dc_helper(right)
+    
+    # combine results
+    matched = min(L1, R2)
+    R = R1 + R2 - matched
+    L = L1 + L2 - matched
+    
+    return (R, L)
+
+```
 
 - **3f.** Assuming any recursive calls are done in parallel, what are
   the recurrences and corresponding asymptotic expressions for the work and span of this solution?
+
+Work: Each element is examined once, W(n) = O(n).
+
+Span: Two recursive calls in parallel, recurrence:
+
+S(n) = S(n/2) + O(1) then we can sy $S(n) \in O(log n)$.
 
